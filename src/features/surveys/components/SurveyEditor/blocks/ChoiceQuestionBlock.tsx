@@ -10,9 +10,12 @@ import {
   Box,
   Button,
   ClickAwayListener,
+  FormControl,
   IconButton,
+  InputLabel,
   ListItemIcon,
   MenuItem,
+  Select,
   TextField,
   Typography,
 } from '@mui/material';
@@ -146,6 +149,7 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
     return !bulkAddingOptions || !!option.text.length;
   });
   const { showConfirmDialog } = useContext(ZUIConfirmDialogContext);
+  const widgetTypeLabelId = `choice-question-widget-type-${element.id}`;
 
   function onDelete(elementId: number, optionId: number) {
     showConfirmDialog({
@@ -180,33 +184,35 @@ const ChoiceQuestionBlock: FC<ChoiceQuestionBlockProps> = ({
           variant="content"
         />
         {editable && (
-          <TextField
-            fullWidth
-            label={messages.blocks.choice.widget()}
-            margin="normal"
-            onChange={(ev) => {
-              setWidgetType(ev.target.value as WidgetTypeValue);
-            }}
-            select
-            SelectProps={{
-              MenuProps: { disablePortal: true },
-            }}
-            sx={{ alignItems: 'center', display: 'flex' }}
-            value={widgetType}
-          >
-            {Object.entries(widgetTypes).map(([value, type]) => (
-              <MenuItem key={value} value={value}>
-                <Box alignItems="center" display="flex">
-                  <ListItemIcon>{type.icon}</ListItemIcon>
-                  <Msg
-                    id={
-                      messageIds.blocks.choice.widgets[value as WidgetTypeValue]
-                    }
-                  />
-                </Box>
-              </MenuItem>
-            ))}
-          </TextField>
+          <FormControl fullWidth margin="normal">
+            <InputLabel id={widgetTypeLabelId}>
+              {messages.blocks.choice.widget()}
+            </InputLabel>
+            <Select
+              label={messages.blocks.choice.widget()}
+              labelId={widgetTypeLabelId}
+              MenuProps={{ disablePortal: true }}
+              onChange={(ev) => {
+                setWidgetType(ev.target.value as WidgetTypeValue);
+              }}
+              value={widgetType}
+            >
+              {Object.entries(widgetTypes).map(([value, type]) => (
+                <MenuItem key={value} value={value}>
+                  <Box alignItems="center" display="flex">
+                    <ListItemIcon>{type.icon}</ListItemIcon>
+                    <Msg
+                      id={
+                        messageIds.blocks.choice.widgets[
+                          value as WidgetTypeValue
+                        ]
+                      }
+                    />
+                  </Box>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         )}
         <ZUIReorderable
           centerWidgets
